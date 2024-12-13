@@ -1,7 +1,6 @@
 #include <iostream>
 #include <list>
 #include <tuple>
-#include <queue>
 #include <unordered_map>
 #include <vector>
 
@@ -15,8 +14,8 @@ using namespace std;
 class Graph
 {
 private:
-    unordered_map<int, vector<pair<int, double>>> Adj;
-    vector<int> V;
+    unordered_map<size_t, vector<pair<size_t, double> > > Adj;
+    vector<size_t> V;
 
 public:
     Graph();
@@ -24,13 +23,13 @@ public:
     ~Graph();
     Graph &operator=(const Graph &G);
 
-    void add_edge(int u, int v, double w = 1);
-    void remove_edge(int u, int v);
-    void delete_vertex(int u);
-    void add_vertex(int u);
+    void add_edge(size_t u, size_t v, double w = 1);
+    void remove_edge(size_t u, size_t v);
+    void delete_vertex(size_t u);
+    void add_vertex(size_t u);
 
-    bool check_vertex(int u) const;
-    bool check_edge(int u, int v) const;
+    bool check_vertex(size_t u) const;
+    bool check_edge(size_t u, size_t v) const;
     bool is_empty() const;
 
     static Graph read_from_STDIN();

@@ -13,5 +13,7 @@ int main()
     g.add_vertex(2);
     g.add_edge(1,2);
     g.add_edge(2,1,0.1);
+    g.remove_edge(1,2);
+    g.remove_edge(1,2);
     return 0;
 };

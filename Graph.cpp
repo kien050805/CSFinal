@@ -18,7 +18,7 @@ Graph &Graph::operator=(const Graph &G)
     return *this;
 };
 
-void Graph::add_edge(int u, int v, double w)
+void Graph::add_edge(size_t u, size_t v, double w)
 {
     if (!check_vertex(u))
     {
@@ -30,19 +30,19 @@ void Graph::add_edge(int u, int v, double w)
     }
     if (!check_edge(u, v))
     {
-        Adj[u].push_back({v, w});
+        Adj[u].push_back(make_pair(v, w));
     }
     return;
 };
 
-void Graph::remove_edge(int u, int v)
+void Graph::remove_edge(size_t u, size_t v)
 {
     if (!check_vertex(u))
     {
         throw edge_exception();
     }
 
-    for (int i = 0; i < Adj[u].size(); i++)
+    for (size_t i = 0; i < Adj[u].size(); i++)
     {
         if (Adj[u][i].first == v)
         {
@@ -54,24 +54,26 @@ void Graph::remove_edge(int u, int v)
     throw edge_exception();
 }
 
-void Graph::add_vertex(int u)
+void Graph::add_vertex(size_t u)
 {
     if (check_vertex(u))
     {
         throw vertex_exception();
-    };
-    V.push_back(u);
-    Adj.insert({u, vector<pair<int, double>>()});
-};
+    }
 
-void Graph::delete_vertex(int u)
+    V.push_back(u);
+
+    Adj[u];
+}
+
+void Graph::delete_vertex(size_t u)
 {
     if (!check_vertex(u))
     {
         throw vertex_exception();
     }
 
-    for (int i = 0; i < V.size(); i++)
+    for (size_t i = 0; i < V.size(); i++)
     {
         if (check_edge(V[i], u))
         {
@@ -79,22 +81,21 @@ void Graph::delete_vertex(int u)
         };
     }
     Adj.erase(u);
-    V.erase(remove(V.begin(), V.end(), u), V.end());
+    V.erase(find(V.begin(), V.end(), u));
 }
 
-bool Graph::check_vertex(int u) const
+bool Graph::check_vertex(size_t u) const
 {
     return Adj.find(u) != Adj.end();
 }
 
-bool Graph::check_edge(int u, int v) const
+bool Graph::check_edge(size_t u, size_t v) const
 {
     if (!check_vertex(u))
     {
         return false;
     }
-
-    for (const pair<int, double> &edge : Adj.at(u))
+    for (const pair<size_t, double> &edge : Adj.at(u))
     {
         if (edge.first == v)
         {
