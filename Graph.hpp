@@ -15,7 +15,7 @@ using namespace std;
 class Graph
 {
 private:
-    unordered_map<int, vector<int, double>> Adj;
+    unordered_map<int, vector<pair<int, double>>> Adj;
     vector<int> V;
 
 public:
@@ -24,7 +24,7 @@ public:
     ~Graph();
     Graph &operator=(const Graph &G);
 
-    void add_edge(int u, int v, double w);
+    void add_edge(int u, int v, double w = 1);
     void remove_edge(int u, int v);
     void delete_vertex(int u);
     void add_vertex(int u);
