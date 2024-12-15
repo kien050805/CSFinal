@@ -109,3 +109,24 @@ bool Graph::is_empty() const
 {
     return V.empty();
 }
+
+
+unordered_map<size_t, pair<size_t, double>> Graph::dijsktra(size_t v)
+{
+    unordered_map<size_t, pair<size_t, double>> map;
+    if (is_empty())
+    {
+        return map;
+    };
+
+    for (int i = 1; i < V.size() + 1; i++)
+    {
+        map.insert({V[i], pair<int, int>(-1, 0)}); // -1 as unreachable, 0 as NIL
+    }
+
+    map[v].first = 0;
+    map[v].second = -1;
+
+    
+
+}
