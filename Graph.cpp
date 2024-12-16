@@ -20,15 +20,8 @@ Graph &Graph::operator=(const Graph &G)
 
 void Graph::add_edge(size_t u, size_t v, double w)
 {
-    if (!check_vertex(u))
-    {
-        return;
-    }
-    if (!check_vertex(v))
-    {
-        return;
-    }
-    if (!check_edge(u, v))
+
+    if (check_vertex(u) && check_vertex(v) && !check_edge(u, v))
     {
         Adj[u].push_back(make_pair(v, w));
     }
@@ -52,6 +45,26 @@ void Graph::remove_edge(size_t u, size_t v)
     };
 
     throw edge_exception();
+}
+
+void Graph::update_weight(size_t u, size_t v, double w)
+{
+    if (check_vertex(u) && check_vertex(v))
+    {
+        for (pair<size_t, double> &edge : Adj.at(u))
+        {
+            if (edge.first == v)
+            {
+                edge.second = w;
+                return;
+            }
+        }
+        throw vertex_exception();
+    }
+    else
+    {
+        throw edge_exception();
+    };
 }
 
 void Graph::add_vertex(size_t u)
@@ -108,25 +121,4 @@ bool Graph::check_edge(size_t u, size_t v) const
 bool Graph::is_empty() const
 {
     return V.empty();
-}
-
-
-unordered_map<size_t, pair<size_t, double>> Graph::dijsktra(size_t v)
-{
-    unordered_map<size_t, pair<size_t, double>> map;
-    if (is_empty())
-    {
-        return map;
-    };
-
-    for (int i = 1; i < V.size() + 1; i++)
-    {
-        map.insert({V[i], pair<int, int>(-1, 0)}); // -1 as unreachable, 0 as NIL
-    }
-
-    map[v].first = 0;
-    map[v].second = -1;
-
-    
-
 }

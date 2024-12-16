@@ -25,6 +25,7 @@ public:
 
     void add_edge(size_t u, size_t v, double w = 1);
     void remove_edge(size_t u, size_t v);
+    void update_weight(size_t u, size_t v, double w = 1);
     void delete_vertex(size_t u);
     void add_vertex(size_t u);
 
@@ -33,7 +34,6 @@ public:
     bool is_empty() const;
 
     static Graph read_from_STDIN();
-    unordered_map<size_t, pair<size_t, double>> dijsktra(size_t v);
 };
 
 #endif

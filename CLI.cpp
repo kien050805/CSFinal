@@ -2,6 +2,7 @@
 #include <fstream>
 #include <unordered_map>
 #include <vector>
+#include <sstream>
 #include "Graph.cpp"
 using namespace std;
 
@@ -11,7 +12,7 @@ private:
     Graph G;
     size_t n;
     size_t m;
-    unordered_map<size_t, pair<double, double> > Coor;
+    unordered_map<double, unordered_map<double, size_t> > Coor;
     unordered_map<size_t, unordered_map<size_t, string> > Name;
 
 public:
@@ -32,7 +33,7 @@ public:
             double x, y;
             string s;
             file >> id >> x >> y;
-            Coor[id] = make_pair(x, y);
+            Coor[x][y] = id;
             G.add_vertex(id);
         }
 
@@ -51,6 +52,38 @@ public:
         file.close();
         cout << "Graph successfully loaded!" << endl;
     }
+
+    void get_coordinates(double &start_x, double &start_y, double &end_x, double &end_y)
+    {
+        cout << "Enter a start coordinate: ";
+
+        string input;
+        getline(cin, input);
+        if (input == "q")
+        {
+            exit(0);
+        }
+        else
+        {
+            stringstream ss(input);
+            ss >> start_x >> start_y;
+        }
+
+        cout << "Enter an end coordinate: ";
+        getline(cin, input);
+        if (input == "q")
+        {
+            exit(0);
+        }
+        else
+        {
+            stringstream ss(input);
+            ss >> end_x >> end_y;
+        }
+
+        cout << start_x << " " << start_y << " " << end_x << " " << end_y << endl;
+    }
+
 };
 
 void intro()
@@ -74,6 +107,13 @@ int main()
 
     graph_map.load_file("denison.out");
 
+    while (1)
+    {
+        double start_x, start_y, end_x, end_y;
+        graph_map.get_coordinates(start_x, start_y, end_x, end_y);
+
+
+    };
 
     return 0;
 }
