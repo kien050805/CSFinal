@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <vector>
 #include <sstream>
-#include "Graph.cpp"
+#include "Graph.hpp"
 using namespace std;
 
 class GraphMap
@@ -12,8 +12,8 @@ private:
     Graph G;
     size_t n;
     size_t m;
-    unordered_map<double, unordered_map<double, size_t> > Coor;
-    unordered_map<size_t, unordered_map<size_t, string> > Name;
+    unordered_map<double, unordered_map<double, size_t>> Coor;
+    unordered_map<size_t, unordered_map<size_t, string>> Name;
 
 public:
     void load_file(const string &file_name)
@@ -80,10 +80,40 @@ public:
             stringstream ss(input);
             ss >> end_x >> end_y;
         }
-
-        cout << start_x << " " << start_y << " " << end_x << " " << end_y << endl;
     }
+    void find_path()
+    {
+        double start_x, start_y, end_x, end_y;
+        get_coordinates(start_x, start_y, end_x, end_y);
 
+        auto path = G.dijkstra(Coor[start_x][start_y]);
+
+        cout << "The shortest path from (" << start_x << ", " << start_y << ") to ("
+             << end_x << ", " << end_y << ") is: ";
+
+        if (path.find(Coor[end_x][end_y]) == path.end())
+        {
+            cout << "No path found!" << endl;
+            return;
+        }
+
+        vector<size_t> result_path;
+        size_t current_vertex = Coor[end_x][end_y];
+
+        while (current_vertex != -1)
+        {
+            result_path.push_back(current_vertex);
+            current_vertex = path[current_vertex].second;
+        }
+
+        reverse(result_path.begin(), result_path.end());
+
+        for (const auto &vertex : result_path)
+        {
+            cout << vertex << " ";
+        }
+        cout << endl;
+    }
 };
 
 void intro()
@@ -109,10 +139,7 @@ int main()
 
     while (1)
     {
-        double start_x, start_y, end_x, end_y;
-        graph_map.get_coordinates(start_x, start_y, end_x, end_y);
-
-
+        graph_map.find_path();
     };
 
     return 0;
