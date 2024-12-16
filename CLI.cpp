@@ -116,13 +116,10 @@ public:
     }
 };
 
-void intro()
-{
-    cout << "Welcome to my CLI route planner! You may enter the letter q at any time to exit." << endl;
-}
 
 string get_file()
 {
+    cout << "Welcome to my CLI route planner! You may enter the letter q at any time to exit." << endl;
     cout << "Enter a file name to load: ";
     string file;
     cin >> file;
@@ -130,12 +127,12 @@ string get_file()
 }
 
 int main()
-{
-    intro();
-    // string file_name = get_file();
+{  
+    string file = get_file();
+
     GraphMap graph_map;
 
-    graph_map.load_file("denison.out");
+    graph_map.load_file(file);
 
     while (1)
     {
