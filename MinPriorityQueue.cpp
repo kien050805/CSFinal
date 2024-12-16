@@ -1,91 +1,100 @@
 #include "MinPriorityQueue.hpp"
-#include <bits/stdc++.h>
+#include <algorithm> 
+#include <iostream>
+#include <list>
+#include <tuple>
+#include <unordered_map>
+#include <vector>
 
-template <typename T>
-MinPriorityQueue<T>::MinPriorityQueue() 
+using namespace std;
+
+template <typename K, typename V>
+MinPriorityQueue<K, V>::MinPriorityQueue() 
 {}
 
-template <typename T>
-MinPriorityQueue<T>::MinPriorityQueue(const MinPriorityQueue &q) 
+template <typename K, typename V>
+MinPriorityQueue<K, V>::MinPriorityQueue(const MinPriorityQueue<K, V> &q) 
 {
     heap = q.heap;
 }
 
-template <typename T>
-MinPriorityQueue<T>::~MinPriorityQueue() 
+template <typename K, typename V>
+MinPriorityQueue<K, V>::~MinPriorityQueue() 
 {}
 
-template <typename T>
-MinPriorityQueue<T> &MinPriorityQueue<T>::operator=(const MinPriorityQueue<T> &q) 
+template <typename K, typename V>
+MinPriorityQueue<K, V> &MinPriorityQueue<K, V>::operator=(const MinPriorityQueue<K, V> &q) 
 {
     heap = q.heap;
     return *this;
 }
 
-template <typename T>
-void MinPriorityQueue<T>::insert(T x) 
+template <typename K, typename V>
+void MinPriorityQueue<K, V>::insert(pair<K, V> &x) 
 {
-    
     heap.push_back(x);
-    decreaseKey(x, x);
+    decreaseKey(x, x.first);
 }
 
-template <typename T>
-void MinPriorityQueue<T>::minimum() 
+template <typename K, typename V>
+V MinPriorityQueue<K, V>::minimum() 
 {
-    return heap[0];
+    return heap[0].second;
 }
 
-template <typename T>
-T MinPriorityQueue<T>::extractMin() 
+template <typename K, typename V>
+V MinPriorityQueue<K, V>::extractMin() 
 {
     int size = heap.size();
-     if (size <= 0)
-        return -1;  // Indicates that the heap is empty
-    if (size == 1) {
-        return heap[0];
-    }
+    if (size <= 0)
+        throw heap_underflow_exception();  // Indicates that the heap is empty
 
     // Store the minimum value, and remove it
-    T root = heap[0];
+    pair<K, V> root = heap[0];
     heap[0] = heap[size - 1];
     heap.pop_back();
 
     // Heapify the root node after deletion
     heapify(0);  
-    return root;
+    return root.second;
 }
 
-template <typename T>
-int MinPriorityQueue<T>::parent(int i) 
+template <typename K, typename V>
+int MinPriorityQueue<K, V>::parent(int i) 
 {
-    return int(i / 2);
+    return int((i - 1)/ 2);
 }
 
 
-template <typename T>
-void MinPriorityQueue<T>::decreaseKey(T x) 
+template <typename K, typename V>
+void MinPriorityQueue<K, V>::decreaseKey(pair<K, V> &x, K key) 
 {
-    auto i = find(heap.start(), heap.end(), x);
-    while (i > 1 && heap[parent(i)] > heap[i])
+    if (key > x.first)
+        throw Key_exception();
+    
+    auto it = find(heap.begin(), heap.end(), x);
+    int index = std::distance(heap.begin(), it);
+    heap[index].first = key;
+    while (index > 0 && heap[parent(index)].first > heap[index].first)
     {
-        swap(heap[parent(i)], heap[i]);
-        i = parent(i);
+        swap(heap[parent(index)], heap[index]);
+        index = parent(index);
     }
     
 }
 
-template <typename T>
-void MinPriorityQueue<T>::remove(T x) 
+template <typename K, typename V>
+void MinPriorityQueue<K, V>::remove(pair<K, V> &x) 
 {
-    auto i = find(heap.start(), heap.end(), x);
-    swap(heap[i], heap[heap.size() - 1]);
+    auto it = find(heap.begin(), heap.end(), x);
+    int index = std::distance(heap.begin(), it);
+    swap(heap[index], heap[heap.size() - 1]);
     heap.pop_back();
-    heapify(i);
+    heapify(index);
 }
 
-template <typename T>
-void MinPriorityQueue<T>::heapify(int i)
+template <typename K, typename V>
+void MinPriorityQueue<K, V>::heapify(int i)
 {
     int size = heap.size();
     int smallest = i;    
@@ -95,11 +104,11 @@ void MinPriorityQueue<T>::heapify(int i)
     int right = 2 * i + 2;   
     
     // If left child is smaller than root
-    if (left < size && heap[left] < heap[smallest])
+    if (left < size && heap[left].first < heap[smallest].first)
         smallest = left;
 
     // If right child is smaller than the smallest so far
-    if (right < size && heap[right] < heap[smallest])
+    if (right < size && heap[right].first < heap[smallest].first)
         smallest = right;
 
     // If smallest is not root
@@ -108,3 +117,9 @@ void MinPriorityQueue<T>::heapify(int i)
         heapify(smallest);                
     }
 }
+template <typename K, typename V>
+bool MinPriorityQueue<K, V>::is_empty()
+{
+    return heap.empty();
+}
+

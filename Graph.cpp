@@ -1,4 +1,6 @@
+#include <bits/stdc++.h>
 #include "Graph.hpp"
+#include "MinPriorityQueue.hpp"
 using namespace std;
 
 Graph::Graph() {};
@@ -76,7 +78,7 @@ void Graph::add_vertex(size_t u)
 
     V.push_back(u);
 
-    Adj[u];
+    Adj.insert({u,vector<pair<size_t, double> >()});
 }
 
 void Graph::delete_vertex(size_t u)
@@ -121,4 +123,47 @@ bool Graph::check_edge(size_t u, size_t v) const
 bool Graph::is_empty() const
 {
     return V.empty();
+}
+
+
+unordered_map<size_t, pair<double, size_t>> Graph::dijsktra(size_t v)
+{
+    unordered_map<size_t, pair<double, size_t>> map;
+    if (is_empty())
+    {
+        return map;
+    };
+
+    for (int i = 0; i < V.size(); i++)
+    {
+        map.insert({V[i], pair<double, size_t>(-1, 0)}); // -1 as unreachable, 0 as NIL
+    }
+
+    map[v].first = 0;
+    map[v].second = -1;
+
+    MinPriorityQueue<double, pair<double, size_t>> pqueue;
+
+    for (int i = 0; i < V.size(); i++)
+    {
+        pqueue.insert(make_pair(map[V[i]].first, map[V[i]]));
+    }
+ 
+
+    while (!pqueue.is_empty())
+    {
+        pair<double, size_t> u = pqueue.extractMin();
+        for (int i = 0;i < Adj[u.second].size(); i++)
+        {
+            pair<double, size_t> s = map[Adj[u.second][i].second];
+            if (s.first > u.first + Adj[u.second][i].first)
+            {
+                s.first = u.first + Adj[u.second][i].first;
+                s.second = u.second;
+                pqueue.decreaseKey(make_pair(s.first, s), s.first);
+            }
+        }
+    }
+    
+    return map;
 }

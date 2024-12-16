@@ -11,27 +11,29 @@
 
 using namespace std;
 
-template<typename T>
+template<typename K, typename V>
 class MinPriorityQueue
 {
 private:
-    vector<T> heap;
+    vector<pair<K, V>> heap;
 
 public:
     MinPriorityQueue();
-    MinPriorityQueue(const MinPriorityQueue<T> &q);
+    MinPriorityQueue(const MinPriorityQueue<K, V> &q);
     ~MinPriorityQueue();
-    MinPriorityQueue<T> &operator=(const MinPriorityQueue<T> &q);
+    MinPriorityQueue<K, V> &operator=(const MinPriorityQueue<K, V> &q);
 
-    void insert(T x);
-    void minimum();
-    T extractMin();
-    void decreaseKey(T x);
-    void remove(T x);
+    void insert(pair<K, V> &x);
+    V minimum();
+    V extractMin();
+    void decreaseKey(pair<K, V> &x, K key);
+    void remove(pair<K, V> &x);
     void heapify(int i);
     int parent(int i) ;
-
+    bool is_empty();
 
 };
+
+#include "MinPriorityQueue.cpp"
 
 #endif

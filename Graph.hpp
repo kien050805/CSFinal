@@ -34,6 +34,8 @@ public:
     bool is_empty() const;
 
     static Graph read_from_STDIN();
+    unordered_map<size_t, pair<double, size_t>> Graph::dijsktra(size_t v);
+
 };
 
 #endif
