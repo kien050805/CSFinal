@@ -1,5 +1,6 @@
 #include "Graph.hpp"
-
+#include "algorithm"
+#include "cmath"
 using namespace std;
 
 Graph::Graph() {};
