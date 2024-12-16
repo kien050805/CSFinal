@@ -110,7 +110,7 @@ public:
 
         for (const auto &vertex : result_path)
         {
-            cout << vertex << " ";
+            cout << vertex << " -> ";
         }
         cout << endl;
     }
