@@ -7,6 +7,7 @@
 #ifndef GRAPH_HPP
 #define GRAPH_HPP
 
+#include "MinPriorityQueue.hpp"
 #include "customexceptions.hpp"
 
 using namespace std;
@@ -34,8 +35,10 @@ public:
     bool is_empty() const;
 
     static Graph read_from_STDIN();
-    unordered_map<size_t, pair<double, size_t>> Graph::dijsktra(size_t v);
+    unordered_map<size_t, pair<double, size_t>> dijkstra(size_t start);
 
 };
+
+#include "Graph.cpp"
 
 #endif

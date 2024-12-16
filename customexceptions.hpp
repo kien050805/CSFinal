@@ -19,6 +19,13 @@ public:
     }
 };
 
+class empty_queue_exception : public exception {
+public:
+    const char* what() const throw() {
+        return "Error: Empty Queue Exception.";
+    }
+};
+
 class heap_underflow_exception : public exception {
 public:
     const char* what() const throw() {
@@ -26,10 +33,11 @@ public:
     }
 };
 
-class Key_exception : public exception {
+class key_exception : public exception {
 public:
     const char* what() const throw() {
-        return "Error: Key Exception: New Key is greater than current key";
+        return "Error: Key Exception.";
     }
 };
+
 #endif

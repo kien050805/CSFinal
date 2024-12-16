@@ -1,156 +1,152 @@
-// #include <iostream>
-// #include "Graph.cpp"
-
-// using namespace std;
-
-// int main()
-// {
-//     Graph g;
-
-//     g.add_vertex(1);
-//     g.delete_vertex(1);
-//     g.add_vertex(1);
-//     g.add_vertex(2);
-//     g.add_edge(1,2);
-//     g.add_edge(2,1,0.1);
-//     g.remove_edge(1,2);
-//     g.remove_edge(1,2);
-//     return 0;
-// };
-
 #include <iostream>
 #include <cassert>
-#include <string>
-#include "MinPriorityQueue.hpp"
+#include "Graph.hpp"
 
 using namespace std;
 
-// Test case definitions
-void test_insert_and_minimum() {
-    MinPriorityQueue<int, string> pq;
+void test_single_vertex()
+{
+    Graph g;
 
-    pair<int, string> p1(10, "A");
-    pair<int, string> p2(5, "B");
-    pair<int, string> p3(20, "C");
+    g.add_vertex(0);
+    g.add_edge(0, 0, 1.0);
+    assert(g.check_edge(0, 0));
+    g.remove_edge(0, 0);
+    assert(!g.check_edge(0, 0));
+    g.delete_vertex(0);
+    assert(!g.check_vertex(0));
+    g.add_edge(0, 0, 1.0);
+    assert(g.is_empty());
+    g.add_vertex(0);
+    g.add_edge(0, 0, -1.0);
+    assert(!g.is_empty());
+    g.delete_vertex(0);
 
-    pq.insert(p1);
-    assert(pq.minimum() == "A");
-
-    pq.insert(p2);
-    assert(pq.minimum() == "B"); // B has the smallest key (5)
-
-    pq.insert(p3);
-    assert(pq.minimum() == "B"); // Still B
+    cout << "Single vertex graph passed!" << endl;
 }
 
-void test_extract_min() {
-    MinPriorityQueue<int, string> pq;
+void test_multiple_self_loops()
+{
+    Graph g;
 
-    pair<int, string> p1(10, "A");
-    pair<int, string> p2(5, "B");
-    pair<int, string> p3(20, "C");
+    g.add_vertex(0);
+    g.add_edge(0, 0, 1.0);
+    g.add_edge(0, 0, 2.0);
+    assert(g.check_edge(0, 0));
+    g.update_weight(0, 0, 2.0);
+    assert(g.check_edge(0, 0));
 
-    pq.insert(p1);
-    pq.insert(p2);
-    pq.insert(p3);
-
-    assert(pq.extractMin() == "B"); // Smallest value
-    assert(pq.minimum() == "A");   // Next smallest is A
-
-    assert(pq.extractMin() == "A");
-    assert(pq.minimum() == "C");
-
-    assert(pq.extractMin() == "C");
-    assert(pq.is_empty());
+    cout << "Multiple self-loops test passed!" << endl;
 }
 
-void test_decrease_key() {
-    MinPriorityQueue<int, string> pq;
+void test_update_non_existent_edge()
+{
+    Graph g;
 
-    pair<int, string> p1(10, "A");
-    pair<int, string> p2(20, "B");
+    g.add_vertex(1);
+    g.add_vertex(2);
+    g.add_edge(1, 2, 1.0);
 
-    pq.insert(p1);
-    pq.insert(p2);
-
-    pair<int, string> p2_new(5, "B");
-    pq.decreaseKey(p2, 5); // Update B's key to 5
-
-    assert(pq.minimum() == "B");
-    assert(pq.extractMin() == "B");
-    assert(pq.minimum() == "A");
+    try
+    {
+        g.update_weight(1, 3, 10.0);
+    }
+    catch (const edge_exception &)
+    {
+        cout << "Non-existent edge update test passed!" << endl;
+    }
 }
 
-void test_remove() {
-    MinPriorityQueue<int, string> pq;
+void test_multiple_vertices_same_value()
+{
+    Graph g;
 
-    pair<int, string> p1(10, "A");
-    pair<int, string> p2(5, "B");
-    pair<int, string> p3(20, "C");
+    g.add_vertex(100);
 
-    pq.insert(p1);
-    pq.insert(p2);
-    pq.insert(p3);
+    try
+    {
+        g.add_vertex(100);
+    }
+    catch (const vertex_exception &)
+    {
+    }
 
-    pq.remove(p2); // Remove element B
-    assert(pq.minimum() == "A"); // A is now the smallest
+    assert(g.check_vertex(100));
+    g.delete_vertex(100);
+    assert(!g.check_vertex(100));
 
-    pq.remove(p1); // Remove element A
-    assert(pq.minimum() == "C");
-
-    pq.remove(p3); // Remove element C
-    assert(pq.is_empty());
+    cout << "Multiple vertices with same value test passed!" << endl;
 }
 
-void test_is_empty() {
-    MinPriorityQueue<int, string> pq;
-    assert(pq.is_empty());
+void test_multiple_updates_on_edge()
+{
+    Graph g;
 
-    pair<int, string> p1(10, "A");
-    pq.insert(p1);
-    assert(!pq.is_empty());
+    g.add_vertex(1);
+    g.add_edge(1, 1, 1.0);
+    g.update_weight(1, 1, 5.0);
+    g.update_weight(1, 1, 10.0);
+    assert(g.check_edge(1, 1));
 
-    pq.extractMin();
-    assert(pq.is_empty());
+    cout << "Multiple updates on same edge test passed!" << endl;
 }
 
-void test_copy_constructor_and_assignment() {
-    MinPriorityQueue<int, string> pq1;
+void test_dijkstra_basic() {
+    Graph g;
 
-    pair<int, string> p1(10, "A");
-    pair<int, string> p2(5, "B");
+    g.add_vertex(1);
+    g.add_vertex(2);
+    g.add_vertex(3);
+    g.add_edge(1, 2, 1);
+    g.add_edge(2, 3, 2);
+    g.add_edge(1, 3, 3);
 
-    pq1.insert(p1);
-    pq1.insert(p2);
+    auto result = g.dijkstra(1);
 
-    MinPriorityQueue<int, string> pq2 = pq1; // Test copy constructor
-    assert(pq2.minimum() == pq1.minimum());
-
-    MinPriorityQueue<int, string> pq3;
-    pq3 = pq1; // Test assignment operator
-    assert(pq3.minimum() == pq1.minimum());
+    assert(result[1].first == 0);
+    assert(result[2].first == 1);
+    assert(result[3].first == 3);
+    assert(result[2].second == 1);
+    assert(result[3].second == 1);
+    cout << "Dijkstra basic passed!" << endl;
 }
 
-// Main function to run all test cases
-int main() {
-    test_insert_and_minimum();
-    cout << "test_insert_and_minimum passed!" << endl;
+void test_dijkstra_multiple_path() {
+    Graph g;
 
-    test_extract_min();
-    cout << "test_extract_min passed!" << endl;
+    g.add_vertex(1);
+    g.add_vertex(2);
+    g.add_vertex(3);
+    g.add_vertex(4);
 
-    test_decrease_key();
-    cout << "test_decrease_key passed!" << endl;
+    g.add_edge(1, 2, 1);
+    g.add_edge(2, 3, 1);
+    g.add_edge(1, 3, 5);
+    g.add_edge(3, 4, 1);
 
-    test_remove();
-    cout << "test_remove passed!" << endl;
+    auto result = g.dijkstra(1);
 
-    test_is_empty();
-    cout << "test_is_empty passed!" << endl;
+    assert(result[1].first == 0);
+    assert(result[2].first == 1);
+    assert(result[3].first == 2);
+    assert(result[4].first == 3);
+    assert(result[2].second == 1);
+    assert(result[3].second == 2);
+    assert(result[4].second == 3);
+    cout << "Dijkstra multiple path passed passed!" << endl;
+}
 
-    test_copy_constructor_and_assignment();
-    cout << "test_copy_constructor_and_assignment passed!" << endl;
 
-    cout << "All tests passed!" << endl;
+
+int main()
+{
+    test_single_vertex();
+    test_multiple_self_loops();
+    test_update_non_existent_edge();
+    test_multiple_vertices_same_value();
+    test_multiple_updates_on_edge();
+    test_dijkstra_basic();
+    test_dijkstra_multiple_path();
+    cout << "Pass all tests!" << endl;
     return 0;
-}
+};
