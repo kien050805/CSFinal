@@ -1,3 +1,10 @@
+//========================================================
+// James Bui & Kien Le & Huy Phan
+// December 2024 - Final Project
+// CLI.cpp
+// This file contains the main program to run CLI
+// Find path for every two startpoint and endpoint
+//========================================================
 #include <iostream>
 #include <fstream>
 #include <unordered_map>
@@ -18,6 +25,12 @@ private:
     unordered_map<size_t, unordered_map<size_t, string>> Name;
 
 public:
+    /**
+     * @brief This function is used to load a file for data 
+     * 
+     * @return: If the file is loaded correctly return true,
+     * else return false
+     */
     bool load_file()
     {
         string file_name;
@@ -68,6 +81,15 @@ public:
         return true;
     }
 
+
+    /**
+    * @brief This function is used to get the coordinates from user  
+    * @param start_x: x - coordinate of start point 
+    * @param start_y: y - coordinate of start point 
+    * @param end_x: x - coordinate of end point 
+    * @param end_y: y - coordinate of end point 
+    * @return: not return anything but get input from user
+     */
     void get_coordinates(double &start_x, double &start_y, double &end_x, double &end_y)
     {
         string input;
@@ -115,6 +137,14 @@ public:
         }
     }
 
+    /**
+    * @brief This function is used to validate the input is correct
+    * @param start_x: x - coordinate of start point 
+    * @param start_y: y - coordinate of start point 
+    * @param end_x: x - coordinate of end point 
+    * @param end_y: y - coordinate of end point 
+    * @return: true if the user enter correct coordinates
+     */
     bool validate_input(double start_x, double start_y, double end_x, double end_y)
     {
         if (ID.find(start_x) == ID.end() || ID[start_x].find(start_y) == ID[start_x].end())
@@ -132,6 +162,10 @@ public:
         return true;
     }
 
+    /**
+    * @brief This function is used to find paths betwen start point and endpoint
+    * @return: the paths connecting startpoint and endpoint
+     */
     void find_path()
     {
         double start_x, start_y, end_x, end_y;
