@@ -12,7 +12,8 @@ private:
     Graph G;
     size_t n;
     size_t m;
-    unordered_map<double, unordered_map<double, size_t>> Coor;
+    unordered_map<double, unordered_map<double, size_t>> ID;
+    unordered_map<size_t, pair<double, double>> Coor;
     unordered_map<size_t, unordered_map<size_t, string>> Name;
 
 public:
@@ -36,7 +37,8 @@ public:
             double x, y;
             string s;
             file >> id >> x >> y;
-            Coor[x][y] = id;
+            ID[x][y] = id;
+            Coor[id] = make_pair(x,y);
             G.add_vertex(id);
         }
 
@@ -69,7 +71,7 @@ public:
 
         while (true)
         {
-            cout << "Enter start coordinates (format: x y): ";
+            cout << "Enter start coordinates: ";
             getline(cin, input);
 
             if (input == "q")
@@ -79,7 +81,7 @@ public:
 
             ss.clear();
             ss.str(input);
-            
+
             if (ss >> start_x >> start_y && ss.eof())
             {
                 break;
@@ -90,7 +92,7 @@ public:
 
         while (true)
         {
-            cout << "Enter end coordinates (format: x y): ";
+            cout << "Enter end coordinates: ";
             getline(cin, input);
 
             if (input == "q")
@@ -113,21 +115,20 @@ public:
     {
         double start_x, start_y, end_x, end_y;
         get_coordinates(start_x, start_y, end_x, end_y);
-            if (Coor.find(start_x) == Coor.end() || Coor[start_x].find(start_y) == Coor[start_x].end())
-    {
-        cerr << "Error: Start coordinates (" << start_x << ", " << start_y << ") are not valid!" << endl;
-        return;
-    }
+        if (ID.find(start_x) == ID.end() || ID[start_x].find(start_y) == ID[start_x].end())
+        {
+            cerr << "Error: Start coordinates (" << start_x << ", " << start_y << ") are not valid!" << endl;
+            return;
+        }
 
-    if (Coor.find(end_x) == Coor.end() || Coor[end_x].find(end_y) == Coor[end_x].end())
-    {
-        cerr << "Error: End coordinates (" << end_x << ", " << end_y << ") are not valid!" << endl;
-        return;
-    }
+        if (ID.find(end_x) == ID.end() || ID[end_x].find(end_y) == ID[end_x].end())
+        {
+            cerr << "Error: End coordinates (" << end_x << ", " << end_y << ") are not valid!" << endl;
+            return;
+        }
 
-
-        size_t start_vertex = Coor[start_x][start_y];
-        size_t end_vertex = Coor[end_x][end_y];
+        size_t start_vertex = ID[start_x][start_y];
+        size_t end_vertex = ID[end_x][end_y];
 
         auto path = G.dijkstra(start_vertex);
 
@@ -153,7 +154,7 @@ public:
 
         for (size_t i = 0; i < result_path.size(); ++i)
         {
-            cout << result_path[i];
+            cout << "(" << Coor[result_path[i]].first << ", " << Coor[result_path[i]].second << ")";
             if (i != result_path.size() - 1)
             {
                 cout << " -> ";
