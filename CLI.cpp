@@ -51,7 +51,10 @@ public:
             file >> u >> v >> w;
             if (file.peek() == ' ')
             {
-                file.ignore();
+                while (file.peek() == ' ')
+                {
+                    file.ignore();
+                }
                 getline(file, s);
             }
             G.add_edge(u, v, w);
@@ -176,6 +179,12 @@ public:
             {
                 cout << " -> ";
             }
+
+            if (Name[result_path[i]][result_path[i+1]] != "")
+            {
+                cout << "(" << Name[result_path[i]][result_path[i+1]] << ")" << " -> ";
+            }
+
         }
         cout << " and it has weight " << path[end_vertex].first << "." << endl;
     }
