@@ -2,6 +2,7 @@
 #include <fstream>
 #include <unordered_map>
 #include <vector>
+#include <limits>
 #include <sstream>
 #include "Graph.hpp"
 using namespace std;
@@ -151,7 +152,7 @@ public:
         cout << "The shortest path from (" << start_x << ", " << start_y << ") to ("
              << end_x << ", " << end_y << ") is: ";
 
-        if (path.find(end_vertex) == path.end() || path[end_vertex].first == INFINITY)
+        if (path.find(end_vertex) == path.end() || path[end_vertex].first == numeric_limits<double>::max())
         {
             cout << "No path found!" << endl;
             return;
