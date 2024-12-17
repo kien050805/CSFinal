@@ -2,7 +2,7 @@
 // James Bui & Kien Le & Huy Phan
 // December 2024 - Final Project
 // mytests.cpp
-// This file contains the tests cases for the Graph and 
+// This file contains the tests cases for the Graph and
 // MinPriorityQueue class.
 //========================================================
 
@@ -15,7 +15,7 @@ using namespace std;
 
 /**
  * @brief Test Graph with single vertex.
- * 
+ *
  */
 void test_single_vertex()
 {
@@ -40,7 +40,7 @@ void test_single_vertex()
 
 /**
  * @brief Test Graph with self loops
- * 
+ *
  */
 void test_multiple_self_loops()
 {
@@ -58,7 +58,7 @@ void test_multiple_self_loops()
 
 /**
  * @brief Test Graph by updating non existence edge.
- * 
+ *
  */
 void test_update_non_existent_edge()
 {
@@ -80,7 +80,7 @@ void test_update_non_existent_edge()
 
 /**
  * @brief Test Graph with multiple vertices with same value.
- * 
+ *
  */
 void test_multiple_vertices_same_value()
 {
@@ -105,7 +105,7 @@ void test_multiple_vertices_same_value()
 
 /**
  * @brief Test Graph by updating edge multiple times.
- * 
+ *
  */
 void test_multiple_updates_on_edge()
 {
@@ -122,7 +122,7 @@ void test_multiple_updates_on_edge()
 
 /**
  * @brief Test Graph Dijkstra's algorithm. Simple version with 3 vertices.
- * 
+ *
  */
 void test_dijkstra_1()
 {
@@ -142,42 +142,65 @@ void test_dijkstra_1()
     assert(result[3].first == 3);
     assert(result[2].second == 1);
     assert(result[3].second == 1);
-    cout << "Test Dijkstra basic passed!" << endl;
+    cout << "Test Dijkstra 1 passed!" << endl;
 }
 
 /**
- * @brief Test Graph Dijkstra's algorithm. Medium version with multiple path.
- * 
+ * @brief Test Graph Dijkstra's algorithm. Harder versions with back and fourth edges
+ *
  */
 void test_dijkstra_2()
 {
     Graph g;
 
+    g.add_vertex(0);
     g.add_vertex(1);
-    g.add_vertex(2);
     g.add_vertex(3);
+    g.add_vertex(5);
+    g.add_vertex(7);
+    g.add_vertex(2);
     g.add_vertex(4);
+    g.add_vertex(6);
 
-    g.add_edge(1, 2, 1);
-    g.add_edge(2, 3, 1);
-    g.add_edge(1, 3, 5);
-    g.add_edge(3, 4, 1);
+    g.add_edge(2, 0, 5);
+    g.add_edge(4, 2, 10);
+    g.update_weight(4, 2, 6);
+    g.add_edge(3, 1, 3);
+    g.add_edge(2, 1, 1);
+    g.add_edge(2, 6, 5);
+    g.add_edge(2, 5, 5);
+    g.add_edge(1, 6, 3);
+    g.add_edge(5, 1, 2);
+    g.add_edge(5, 7, 5);
+    g.add_edge(6, 2, 8);
+    g.add_edge(7, 5, 6);
+    g.add_edge(7, 6, 1);
 
-    auto result = g.dijkstra(1);
+    auto result = g.dijkstra(3);
 
-    assert(result[1].first == 0);
-    assert(result[2].first == 1);
-    assert(result[3].first == 2);
-    assert(result[4].first == 3);
-    assert(result[2].second == 1);
-    assert(result[3].second == 2);
-    assert(result[4].second == 3);
-    cout << "Test Dijkstra multiple path passed passed!" << endl;
+    assert(result[0].first == 19);
+    assert(result[0].second == 2);
+    assert(result[1].first == 3);
+    assert(result[1].second == 3);
+    assert(result[2].first == 14);
+    assert(result[2].second == 6);
+    assert(result[3].first == 0);
+    assert(result[3].second == -1);
+    assert(result[4].first == INFINITY);
+    assert(result[4].second == -1);
+    assert(result[5].first == 19);
+    assert(result[5].second == 2);
+    assert(result[6].first == 6);
+    assert(result[6].second == 1);
+    assert(result[7].first == 24);
+    assert(result[7].second == 5);
+
+    cout << "Test Dijkstra 2 passed!" << endl;
 }
 
 /**
  * @brief Test Graph Dijkstra's algorithm. Harder version with multiple vertices and edges.
- * 
+ *
  */
 void test_dijkstra_3()
 {
@@ -202,26 +225,26 @@ void test_dijkstra_3()
 
     auto result = g.dijkstra(0);
 
-    assert(result[0].first == 0);  
-    assert(result[1].first == 4);  
-    assert(result[2].first == 1);  
-    assert(result[3].first == 9);  
-    assert(result[4].first == 11); 
-    assert(result[5].first == 12); 
-    assert(result[1].second == 0); 
-    assert(result[2].second == 0); 
-    assert(result[3].second == 2); 
-    assert(result[4].second == 2); 
-    assert(result[5].second == 3); 
+    assert(result[0].first == 0);
+    assert(result[1].first == 4);
+    assert(result[2].first == 1);
+    assert(result[3].first == 9);
+    assert(result[4].first == 11);
+    assert(result[5].first == 12);
+    assert(result[1].second == 0);
+    assert(result[2].second == 0);
+    assert(result[3].second == 2);
+    assert(result[4].second == 2);
+    assert(result[5].second == 3);
 
-    cout << "Test Dijkstra complicated passed!" << endl;
+    cout << "Test Dijkstra 3 passed!" << endl;
 }
 
 /**
- * @brief Test Graph Operator equal. Expected a deep copy.
- * 
+ * @brief Test Graph Operator=. Expected a deep copy.
+ *
  */
-void test_copy()
+void test_graph_copy()
 {
     Graph g;
     g.add_vertex(1);
@@ -237,12 +260,12 @@ void test_copy()
     assert(!h.check_edge(1, 2));
     assert(!h.check_edge(2, 1));
 
-    cout << "Test copy passed!" << endl;
+    cout << "Test Graph copy passed!" << endl;
 }
 
 /**
  * @brief Test MinPriorityQueue empty.
- * 
+ *
  */
 void test_empty_priority_queue()
 {
@@ -268,7 +291,7 @@ void test_empty_priority_queue()
 
 /**
  * @brief Test MinPriorityQueue but increasing key and expect an error.
- * 
+ *
  */
 void test_increase_key()
 {
@@ -289,7 +312,7 @@ void test_increase_key()
 
 /**
  * @brief Test MinPriorityQueue by extract after decrease key.
- * 
+ *
  */
 void test_extract_after_decrease_key()
 {
@@ -308,7 +331,7 @@ void test_extract_after_decrease_key()
 
 /**
  * @brief Test MinPriorityQueue by decrease non-existence key.
- * 
+ *
  */
 void test_non_existence()
 {
@@ -326,6 +349,26 @@ void test_non_existence()
     cout << "Test non existence passed!" << endl;
 }
 
+/**
+ * @brief @brief Test MinPriorityQueue Operator=. Expected a deep copy.
+ * 
+ */
+void test_queue_copy ()
+{
+    MinPriorityQueue<int, double> pq;
+    pq.insert(10, 10.1);
+    pq.insert(11, 11.1);
+    pq.insert(12, 9.9);
+
+    MinPriorityQueue<int, double> pq_copy = pq;
+
+    pq_copy.decrease_key(1, 10.1);
+    assert(pq_copy.extract_min() == 10.1);
+    assert(pq.extract_min() == 10.1);
+    assert(pq.extract_min() == 11.1);
+
+    cout << "Test MinPriorityQueue copy passed!" << endl;
+}
 
 int main()
 {
@@ -337,12 +380,13 @@ int main()
     test_dijkstra_1();
     test_dijkstra_2();
     test_dijkstra_3();
-    test_copy();
+    test_graph_copy();
 
     test_empty_priority_queue();
     test_increase_key();
     test_extract_after_decrease_key();
     test_non_existence();
+    test_queue_copy();
 
     cout << "Pass all tests!" << endl;
     return 0;
