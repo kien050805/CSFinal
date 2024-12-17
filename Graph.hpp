@@ -1,6 +1,11 @@
+//========================================================
+// James Bui & Kien Le & Huy Phan
+// December 2024 - Final Project
+// Class.hpp
+// This file contains the header for the Graph class methods.
+//========================================================
+
 #include <iostream>
-#include <list>
-#include <tuple>
 #include <unordered_map>
 #include <vector>
 

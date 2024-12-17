@@ -1,3 +1,11 @@
+//========================================================
+// James Bui & Kien Le & Huy Phan
+// December 2024 - Final Project
+// MinPriorityQueue.hpp
+// This file contains the header for the MinPriorityQueue
+// class methods.
+//========================================================
+
 #ifndef MINPRIORITYQUEUE_HPP
 #define MINPRIORITYQUEUE_HPP
 
