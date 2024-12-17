@@ -16,13 +16,16 @@ private:
     unordered_map<size_t, unordered_map<size_t, string>> Name;
 
 public:
-    void load_file(const string &file_name)
+    bool load_file()
     {
+        string file_name;
+        cout << "Enter a file name to load: ";
+        cin >> file_name;
         ifstream file(file_name);
         if (!file.is_open())
         {
-            cerr << "Error opening file!" << endl;
-            return;
+            cout << "Error opening file!" << endl;
+            return false;
         }
 
         file >> n >> m;
@@ -43,62 +46,102 @@ public:
             double w;
             string s;
             file >> u >> v >> w;
-            file.ignore();
-            getline(file, s);
+            if (file.peek() == ' ')
+            {
+                file.ignore();
+                getline(file, s);
+            }
             G.add_edge(u, v, w);
             Name[u][v] = s;
         }
 
         file.close();
         cout << "Graph successfully loaded!" << endl;
+        cin.ignore();
+
+        return true;
     }
 
     void get_coordinates(double &start_x, double &start_y, double &end_x, double &end_y)
     {
-        cout << "Enter a start coordinate: ";
-
         string input;
-        getline(cin, input);
-        if (input == "q")
+        stringstream ss;
+
+        while (true)
         {
-            exit(0);
-        }
-        else
-        {
-            stringstream ss(input);
-            ss >> start_x >> start_y;
+            cout << "Enter start coordinates (format: x y): ";
+            getline(cin, input);
+
+            if (input == "q")
+            {
+                quit();
+            }
+
+            ss.clear();
+            ss.str(input);
+            
+            if (ss >> start_x >> start_y && ss.eof())
+            {
+                break;
+            }
+
+            cerr << "Invalid input. Please try again." << endl;
         }
 
-        cout << "Enter an end coordinate: ";
-        getline(cin, input);
-        if (input == "q")
+        while (true)
         {
-            exit(0);
-        }
-        else
-        {
-            stringstream ss(input);
-            ss >> end_x >> end_y;
+            cout << "Enter end coordinates (format: x y): ";
+            getline(cin, input);
+
+            if (input == "q")
+            {
+                quit();
+            }
+
+            ss.clear();
+            ss.str(input);
+            if (ss >> end_x >> end_y && ss.eof())
+            {
+                break;
+            }
+
+            cerr << "Invalid input. Please try again." << endl;
         }
     }
+
     void find_path()
     {
         double start_x, start_y, end_x, end_y;
         get_coordinates(start_x, start_y, end_x, end_y);
+            if (Coor.find(start_x) == Coor.end() || Coor[start_x].find(start_y) == Coor[start_x].end())
+    {
+        cerr << "Error: Start coordinates (" << start_x << ", " << start_y << ") are not valid!" << endl;
+        return;
+    }
 
-        auto path = G.dijkstra(Coor[start_x][start_y]);
+    if (Coor.find(end_x) == Coor.end() || Coor[end_x].find(end_y) == Coor[end_x].end())
+    {
+        cerr << "Error: End coordinates (" << end_x << ", " << end_y << ") are not valid!" << endl;
+        return;
+    }
+
+
+        size_t start_vertex = Coor[start_x][start_y];
+        size_t end_vertex = Coor[end_x][end_y];
+
+        auto path = G.dijkstra(start_vertex);
 
         cout << "The shortest path from (" << start_x << ", " << start_y << ") to ("
              << end_x << ", " << end_y << ") is: ";
 
-        if (path.find(Coor[end_x][end_y]) == path.end())
+        if (path.find(end_vertex) == path.end() || path[end_vertex].first == INFINITY)
         {
             cout << "No path found!" << endl;
             return;
         }
 
         vector<size_t> result_path;
-        size_t current_vertex = Coor[end_x][end_y];
+        size_t current_vertex = end_vertex;
 
         while (current_vertex != -1)
         {
@@ -108,36 +151,41 @@ public:
 
         reverse(result_path.begin(), result_path.end());
 
-        for (const auto &vertex : result_path)
+        for (size_t i = 0; i < result_path.size(); ++i)
         {
-            cout << vertex << " -> ";
+            cout << result_path[i];
+            if (i != result_path.size() - 1)
+            {
+                cout << " -> ";
+            }
         }
-        cout << endl;
+        cout << " and it has weight " << path[end_vertex].first << "." << endl;
+    }
+
+    void quit()
+    {
+        cout << "Exiting... Thank you for using me instead of Google Maps!" << endl;
+        exit(0);
     }
 };
 
-
-string get_file()
+int main()
 {
     cout << "Welcome to my CLI route planner! You may enter the letter q at any time to exit." << endl;
-    cout << "Enter a file name to load: ";
-    string file;
-    cin >> file;
-    return file;
-}
-
-int main()
-{  
-    string file = get_file();
 
     GraphMap graph_map;
 
-    graph_map.load_file(file);
+    while (true)
+    {
+        if (graph_map.load_file())
+        {
+            break;
+        };
+    };
 
     while (1)
     {
         graph_map.find_path();
     };
-
     return 0;
 }
