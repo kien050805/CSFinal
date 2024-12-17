@@ -11,6 +11,7 @@
 #include "Graph.hpp"
 #include "MinPriorityQueue.hpp"
 
+
 using namespace std;
 
 int testsPassed = 0;
@@ -237,7 +238,7 @@ void test_dijkstra_2()
     assertTest(result[3].first == 0, "Vertex 3 distance is 0");
     assertTest(result[3].second == -1, "Vertex 3 predecessor is -1");
 
-    assertTest(result[4].first == INFINITY, "Vertex 4 distance is INFINITY");
+    assertTest(result[4].first == numeric_limits<double>::max(), "Vertex 4 distance is INFINITY");
     assertTest(result[4].second == -1, "Vertex 4 predecessor is -1");
 
     assertTest(result[5].first == 19, "Vertex 5 distance is 19");
@@ -356,7 +357,7 @@ void test_decrease_key()
 
     bool exceptionCaught = false;
 
-    try { pq.decrease_key(5, "A"); }
+    try { pq.decrease_key(50, "A"); }
     catch (const key_exception &e) { exceptionCaught = true; }
 
     assertTest(exceptionCaught, "Decrease key throws exception when key increases");

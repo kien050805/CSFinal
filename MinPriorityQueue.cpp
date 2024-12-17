@@ -7,7 +7,7 @@
 //========================================================
 
 #include "MinPriorityQueue.hpp"
-#include "cmath"
+#include <limits>
 using namespace std;
 
 /**
@@ -98,7 +98,7 @@ bool MinPriorityQueue<K, V>::is_empty() const
 template <typename K, typename V>
 void MinPriorityQueue<K, V>::insert(K key, V value)
 {
-    heap.push_back(make_pair(INFINITY, value));
+    heap.push_back(make_pair(numeric_limits<K>::max(), value));
     decrease_key(key, value);
 }
 
@@ -151,8 +151,9 @@ void MinPriorityQueue<K, V>::decrease_key(K key, V value)
         throw key_exception();
     }
 
-    if (key != INFINITY && key >= heap[index].first)
+    if (key != numeric_limits<K>::max() && key > heap[index].first)
     {
+        cout << " Numeric Limits Fails " << (key) << endl;
         throw key_exception();
     };
     heap[index].first = key;

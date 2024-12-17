@@ -8,7 +8,7 @@
 
 #include "Graph.hpp"
 #include "algorithm"
-#include "cmath"
+#include <limits>
 using namespace std;
 
 /**
@@ -224,7 +224,7 @@ unordered_map<size_t, pair<double, size_t>> Graph::dijkstra(size_t start)
 
     for (size_t i = 0; i < V.size(); ++i)
     {
-        map[V[i]] = {INFINITY, -1};
+        map[V[i]] = {numeric_limits<double>::max(), -1};
     }
 
     map[start].first = 0;
